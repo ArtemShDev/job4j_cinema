@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        const searchString = new URLSearchParams(window.location.search);
+        const row_tab = searchString.get('row_tab');
+        const cell_tab = searchString.get('cell_tab');
+        var elem = document.getElementById("id_place");
+        elem.innerHTML = "Вы выбрали ряд " + row_tab + " место " + cell_tab + ", Сумма " + searchString.get('price');
+        if (searchString.get('err') !== null) {
+            var err = document.getElementById("err");
+            var err_text = document.createTextNode(searchString.get('err'));
+            err.appendChild(err_text);
+        }
+    });
+</script>
+<script>
+    function pay() {
+        if ($('#username').val() === '') {
+            alert('Укажите поле ' + $('#username').attr('placeholder'));
+            return false;
+        }
+        if ($('#email').val() === '') {
+            alert('Укажите поле ' + $('#email').attr('placeholder'));
+            return false;
+        }
+        if ($('#phone').val() === '') {
+            alert('Укажите поле ' + $('#phone').attr('placeholder'));
+            return false;
+        }
+        var searchString = new URLSearchParams(window.location.search);
+        var row_tab = searchString.get('row_tab');
+        var cell_tab = searchString.get('cell_tab');
+        var frm = document.getElementById("form_acc");
+        frm.action = frm.action + "?row=" + row_tab + "&cell=" + cell_tab + "&price=" + searchString.get('price');
+        return true;
+    }
+</script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h3 id="id_place">
+            Вы выбрали ряд 1 место 1, Сумма : 500 рублей.
+        </h3>
+    </div>
+    <div class="row">
+        <form action= "http://localhost:8080/job4j_cinema/tickets" method= "POST" id="form_acc">
+            <div class="form-group">
+                <label for="username">ФИО</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="ФИО">
+            </div>
+            <div class="form-group">
+                <label for="email">Почта</label>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Электронная почта">
+            </div>
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Номер телефона">
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="return pay();">Оплатить</button>
+            <div style="color:red; font-weight: bold; margin: 30px 0;" id="err">
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

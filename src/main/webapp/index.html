@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Refresh" content="30" />
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+
+</head>
+<body>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/job4j_cinema/tickets',
+            dataType: 'json'
+        }).done(function (data) {
+            var num_row = 0;
+            var row = null;
+            var tbody = document.getElementById('table_body');
+            for (var ticket of data) {
+                if (num_row !== ticket.row) {
+                    num_row = ticket.row;
+                    if (row !== null) {
+                        tbody.appendChild(row);
+                    }
+                    row = document.createElement('tr');
+                    row.setAttribute("id", "id_" + ticket.row);
+                    let row_th = document.createElement('th');
+                    row_th.innerHTML = ticket.row;
+                    row.appendChild(row_th);
+                }
+                let row_cell = document.createElement('td');
+                let row_input = document.createElement('input');
+                row_input.setAttribute("type", "radio");
+                row_input.setAttribute("name", "place");
+                row_input.setAttribute("row_tab", ticket.row);
+                row_input.setAttribute("cell_tab", ticket.cell);
+                row_input.setAttribute("price", ticket.price);
+                if (ticket.accountId === 0) {
+                    row_cell.setAttribute("bgcolor", "#76e24d");
+                } else {
+                    row_input.setAttribute("disabled","disabled");
+                    row_cell.setAttribute("bgcolor", "#ef2a2a");
+                }
+                row_cell.appendChild(row_input);
+                var new_text = document.createTextNode(" Ряд " + ticket.row + ", Место " + ticket.cell);
+                row_cell.appendChild(new_text);
+                row.appendChild(row_cell);
+                };
+            tbody.appendChild(row);
+            }).fail(function (err) {
+                console.log(err);
+            });
+        });
+    </script>
+
+<div class="container">
+    <div class="row pt-3">
+        <h4>
+            Бронирование мест на сеанс
+        </h4>
+        <table class="table table-bordered" name="table_tickets" id="table_tickets">
+            <thead>
+            <tr>
+                <th style="width: 120px;">Ряд / Место</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+            </tr>
+            </thead>
+            <tbody id="table_body">
+            </tbody>
+        </table>
+    </div>
+    <div class="row float-right">
+        <button type="button" class="btn btn-success" onclick="bookTicket();">Оплатить</button>
+    </div>
+
+    <script>
+        bookTicket = () => {
+            var selectedInput = null;
+            var all = document.getElementsByName("place");
+            for (var i=0, max=all.length; i < max; i++) {
+                if (all[i].checked) {
+                    selectedInput = all[i];
+                    break;
+                }
+            }
+            window.location.assign("http://localhost:8080/job4j_cinema/payment.html?row_tab="
+                + selectedInput.getAttribute("row_tab") + "&cell_tab=" + selectedInput.getAttribute("cell_tab")
+                + "&price=" + selectedInput.getAttribute("price"));
+            // window.location.search = "?name=value";
+        }
+    </script>
+</div>
+</body>
+</html>
