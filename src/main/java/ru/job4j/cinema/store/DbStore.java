@@ -62,7 +62,7 @@ public class DbStore implements Store {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    tickets.add(new Ticket(it.getInt("session_id"), it.getInt("row"),
+                    tickets.add(new Ticket(it.getInt("session_id"), it.getInt("line"),
                             it.getInt("cell"), it.getInt("account_id"), it.getInt("price")));
                 }
             }
@@ -128,7 +128,7 @@ public class DbStore implements Store {
     public boolean saveTicket(Ticket ticket) throws SQLException {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "INSERT INTO ticket(session_id, row, cell, account_id, price) VALUES (?, ?, ?, ?, ?)",
+                     "INSERT INTO ticket(session_id, line, cell, account_id, price) VALUES (?, ?, ?, ?, ?)",
                      PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, ticket.getSessionId());
             ps.setInt(2, ticket.getRow());
