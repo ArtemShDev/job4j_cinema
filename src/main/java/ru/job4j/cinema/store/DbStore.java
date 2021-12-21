@@ -75,14 +75,12 @@ public class DbStore implements Store {
     }
 
     private void getTicketsCinema(HashSet<Ticket> tickets) {
-        //HashSet<Ticket> tickets = new HashSet<>();
         Random random = new Random();
         for (int i = 1; i <= 3; i++) {
             for (int k = 1; k <= 3; k++) {
                 tickets.add(new Ticket(1, i, k, 0, random.nextInt(1000)));
             }
         }
-        //return tickets;
     }
 
     @Override
